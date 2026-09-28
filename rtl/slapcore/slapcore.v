@@ -49,7 +49,15 @@ module slapfight_fpga(
 	input  [15:0] hs_address,       // Hi-score RAM address
 	output  [7:0] hs_data_out,      // Hi-score RAM data output
 	input   [7:0] hs_data_in,       // Hi-score RAM data input
-	input         hs_write          // Hi-score RAM write enable
+	input         hs_write,         // Hi-score RAM write enable
+
+	// RetroAchievements tap: memory writes of both Z80s (level strobes)
+	output        RA_M_WR,          // main CPU /MREQ & /WR
+	output [15:0] RA_M_AD,
+	output  [7:0] RA_M_DO,
+	output        RA_S_WR,          // audio CPU /MREQ & /WR
+	output [15:0] RA_S_AD,
+	output  [7:0] RA_S_DO
 );
 
 //============================================================================
@@ -482,6 +490,10 @@ T80pa Z80A(
 	.RD_n(Z80_RD)
 );
 
+assign RA_M_WR = ~Z80_MREQ & ~Z80_WR;
+assign RA_M_AD = Z80A_addrbus;
+assign RA_M_DO = Z80A_databus_out;
+
 // MCU handshake signals (directly from U7A flip-flops)
 wire RD_BUFFER_FULL_68705, WR_BUFFER_FULL_68705;
 
@@ -712,6 +724,10 @@ T80pa Z80B(
 	.RD_n(AURD),
 	.BUSAK_n(AUDIO_CPU_BUSACK)
 );
+
+assign RA_S_WR = ~AUIMREQ & ~AUWR;
+assign RA_S_AD = CPU_AUA;
+assign RA_S_DO = AUD_out;
 
 // Audio bus ownership - main CPU can access when audio CPU releases bus
 wire AUDIOM_OK = AUDIO_CPU_PORT | AUDIO_CPU_BUSACK | pause_safe;

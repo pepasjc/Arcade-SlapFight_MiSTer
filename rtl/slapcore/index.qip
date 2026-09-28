@@ -5,5 +5,7 @@ set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) "slap_s
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) "slap_roms.v"]
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) "slap_ram.v"]
 set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) "slap_mcu.v"]
+set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) "slapfight_ra_tap.sv"]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) "slapfight_ra_mirror.v"]
 set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) "rom_loader.sv"]
 set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) "ROM82S129sv.sv"]
